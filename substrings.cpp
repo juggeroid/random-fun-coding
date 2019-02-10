@@ -23,7 +23,7 @@ namespace benchmark_timer {
         template <typename R = typename C::duration::rep, typename U = typename C::duration>
         R elapsed() const {
             std::atomic_thread_fence(std::memory_order_relaxed);
-            auto counted_time = std::chrono::duration_cast<U>(C::now() - start_point);
+            auto counted_time = std::chrono::duration_cast<U>(C::now() - start_point).count();
             std::atomic_thread_fence(std::memory_order_relaxed);
             return static_cast<R>(counted_time);
         }
