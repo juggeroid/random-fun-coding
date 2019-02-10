@@ -12,9 +12,26 @@ template <typename T>
 std::ostream &operator<<(std::ostream &o, std::vector<T> const &vector)
 { for (auto const &element: vector) o << element << " "; return o; }
 
-using u64    = std::uint64_t;  using i32 = std::int32_t;
-using size_t = std::size_t;    using u32 = std::uint32_t;
-using i64    = std::int64_t;
+using u64 = std::uint64_t; using i32 = std::int32_t;
+using u32 = std::uint32_t; using i64 = std::int64_t;
+using std::size_t;
+
+namespace benchmark_timer {
+    template <typename C = std::chrono::high_resolution_clock> class timer_c {
+        const typename C::time_point start_point;
+        public: timer_c(): start_point {C::now()} {}
+        template <typename R = typename C::duration::rep, typename U = typename C::duration>
+        R elalpsed() const {
+            std::atomic_thread_fence(std::memory_order_relaxed);
+            auto counted_time = std::chrono::duration_cast<U>(C::now() - start_point);
+            std::atomic_thread_fence(std::memory_order_relaxed);
+            return static_cast<R>(counted_time);
+        }
+    };
+    using precise_stopwatch     = timer_c<>;
+    using system_stopwatch      = timer_c<std::chrono::system_clock>;
+    using monotonic_stopwatch   = timer_c<std::chrono::steady_clock>;
+} // namespace benchmark_timer
 
 namespace string_generator_utility
 {
