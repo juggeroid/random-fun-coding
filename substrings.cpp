@@ -21,10 +21,10 @@ namespace string_generator_utility
     std::string generate_string(std::string::size_type length,
                                 std::vector<char>&& alphabet = {'a', 'b', 'c', 'd'}) {
 
-               std::string             result;
-        static std::random_device      rd;
-        static std::mt19937_64         mersenne_twister_generator {rd ()};
-        const  auto                    supremum = alphabet.size() - 1;
+                      std::string result;
+        static std::random_device rd;
+        static    std::mt19937_64 mersenne_twister_generator {rd ()};
+        const                auto supremum = alphabet.size() - 1;
         std::uniform_int_distribution
         <std::mt19937_64::result_type> range {0, supremum};
 
