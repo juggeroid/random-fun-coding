@@ -21,7 +21,7 @@ namespace benchmark_timer {
         const typename C::time_point start_point;
         public: timer_c(): start_point {C::now()} {}
         template <typename R = typename C::duration::rep, typename U = typename C::duration>
-        R elalpsed() const {
+        R elapsed() const {
             std::atomic_thread_fence(std::memory_order_relaxed);
             auto counted_time = std::chrono::duration_cast<U>(C::now() - start_point);
             std::atomic_thread_fence(std::memory_order_relaxed);
