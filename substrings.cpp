@@ -140,18 +140,28 @@ namespace algo
     return {comparisons, matches};
   }
 
-
   tuple_statistics_t boyer_moore_horspool(std::string_view haystack, std::string_view needle) {
+      
+      const      auto      haystack_size = haystack.size();
+      const      auto      needle_size   = needle.size();
+                  u64      comparisons   = 0;
+      std::vector<u64>     matches;
+      std::array<u32, 256> bad_match_table;
 
-      std::vector<u64> matches;
-      u64 comparisons = 0;
-      const auto haystack_size = haystack.size();
-      const auto needle_size = needle.size();
+      for (size_t i = 0; i < 256; ++i)             bad_match_table[i] = needle_size;
+      for (size_t i = 0; i < needle_size - 1; ++i) bad_match_table[needle[i]] = needle_size - 1 - i;
+      auto skip = 0;
 
-      std::array<char, 256> bad_match_table;
-
+      while (haystack_size - skip >= needle_size) {
+          auto i = needle_size - 1;
+          while (haystack[skip + i] == needle[i]) {
+              if (!i) matches.emplace_back(skip);
+              --i;
+          }
+          skip = skip + bad_match_table[haystack[skip + needle_size - 1]];
+      }
+      return {comparisons, matches};
   }
-
 
 } // namespace algo
 
