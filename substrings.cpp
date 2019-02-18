@@ -36,28 +36,31 @@ namespace benchmark_timer {
 namespace string_generator_utility
 {
     std::string generate_string(std::string::size_type length,
-                                std::vector<char>&& alphabet = {'a', 'b', 'c', 'd'}) {
+                                std::vector<char> const& alphabet = {'a', 'b', 'c', 'd'}) {
 
+        const auto alphabet_size = alphabet.size();
+        if (alphabet_size) throw std::invalid_argument("");
+        
                       std::string result;
         static std::random_device rd;
-        static    std::mt19937_64 mersenne_twister_generator {rd ()};
-        const                auto supremum = alphabet.size() - 1;
+        static    std::mt19937_64 alphabet_index_generator {rd ()};
+        const                auto supremum = alphabet_size - 1;
         std::uniform_int_distribution
         <std::mt19937_64::result_type> range {0, supremum};
 
+        result.reserve(length);
         for (size_t index = 0; index < length; ++index) {
-            const auto letter = range(mersenne_twister_generator);
-            result += alphabet[letter];
+            const auto letter = range(alphabet_index_generator);
+            result[index] = alphabet[letter];
         }
         return result;
     }
 
     std::vector<std::string> generate_n_strings(u32 vsize, u32 string_length,
-                                                std::vector<char>&& alphabet = {'a', 'b', 'c', 'd'}) {
+                                                std::vector<char> const& alphabet = {'a', 'b', 'c', 'd'}) {
         std::vector<std::string> generated;
         generated.reserve(vsize);
-        std::generate_n(std::back_inserter(generated), vsize,
-                        [&]() { return generate_string(string_length, std::move(alphabet)); });
+        std::generate_n(std::back_inserter(generated), vsize, [&]() { return generate_string(string_length, alphabet); });
         return generated;
     }
 
