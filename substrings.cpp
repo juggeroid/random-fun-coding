@@ -24,10 +24,10 @@ using tuple_statistics_t = std::tuple<u64, std::vector<u64>>;
 
 namespace utility {
 	template
-		<typename T, typename = std::enable_if_t<std::is_unsigned_v<T>, T>>
-			std::uint32_t vector_median(std::vector<T> const& vector) {
-			const auto size = vector.size();
-			return std::accumulate(std::begin(vector), std::end(vector), 0) / size;
+	<typename T, typename = std::enable_if_t<std::is_unsigned_v<T>, T>>
+	std::uint32_t vector_median(std::vector<T> const& vector) {
+		const auto size = vector.size();
+		std::accumulate(std::begin(vector), std::end(vector), 0) / size;
 	}
 	template <typename T> void vector_output_to_file(std::vector<T> const& vector, std::string const& filename) {
 		std::ofstream output_file {filename, std::ios::app};
@@ -39,15 +39,15 @@ namespace utility {
 
 namespace benchmark_timer {
 	template <typename C = std::chrono::high_resolution_clock> class timer_c {
-		const typename C::time_point start_point;
+	const typename C::time_point start_point;
 	public: timer_c() : start_point(C::now()) {}
-			template <typename R = typename C::duration::rep, typename U = typename C::duration>
-			R elapsed() const {
-				std::atomic_thread_fence(std::memory_order_relaxed);
-				auto counted_time = std::chrono::duration_cast<U>(C::now() - start_point).count();
-				std::atomic_thread_fence(std::memory_order_relaxed);
-				return static_cast<R>(counted_time);
-			}
+		template <typename R = typename C::duration::rep, typename U = typename C::duration>
+		R elapsed() const {
+			std::atomic_thread_fence(std::memory_order_relaxed);
+			auto counted_time = std::chrono::duration_cast<U>(C::now() - start_point).count();
+			std::atomic_thread_fence(std::memory_order_relaxed);
+			return static_cast<R>(counted_time);
+		}
 	};
 	using precise_stopwatch   = timer_c<>;
 	using system_stopwatch    = timer_c<std::chrono::system_clock>;
@@ -63,12 +63,12 @@ namespace string_generator_utility {
 		const auto alphabet_size = alphabet.size();
 		if (!alphabet_size) throw std::invalid_argument("alphabet cannot be empty");
 
-		std::string result;
+			      std::string result;
 		static std::random_device rd;
 		static    std::mt19937_64 alphabet_index_generator{ rd() };
 		const                auto supremum = alphabet.size() - 1;
 		std::uniform_int_distribution
-			<std::mt19937_64::result_type> range{ 0, supremum };
+		<std::mt19937_64::result_type> range {0, supremum};
 
 		result.reserve(length);
 
@@ -94,8 +94,8 @@ namespace algo {
 	tuple_statistics_t naive_substring(std::string_view haystack, std::string_view needle) {
 
 		const auto haystack_size = haystack.size();
-		const auto needle_size = needle.size();
-		u64 comparisons = 0;
+		const auto needle_size   = needle.size();
+		       u64 comparisons   = 0;
 
 		std::vector<u64> matches;
 		for (size_t index = 0; index < haystack_size - needle_size + 1; ++index) {
@@ -110,14 +110,14 @@ namespace algo {
 
 	tuple_statistics_t rabin_karp(std::string_view haystack, std::string_view needle, i32 alphabet_size = 4) {
 
-		const    auto  needle_size = needle.size();
-		const    auto  haystack_size = haystack.size();
-		static constexpr i32  prime = 101;
-		const     i32  h = std::pow(alphabet_size, needle.size() - 1);
+		const           auto  needle_size   = needle.size();
+		const           auto  haystack_size = haystack.size();
+		static constexpr i32  prime         = 101;
+		const            i32  h             = std::pow(alphabet_size, needle.size() - 1);
 		std::vector<u64> matches;
 
-		size_t  comparisons = 0;
-		i64  needle_hash = 0,
+		size_t  comparisons   = 0;
+		i64     needle_hash   = 0,
 			haystack_hash = 0;
 
 		for (size_t i = 0; i < needle_size; ++i) {
@@ -142,8 +142,8 @@ namespace algo {
 	tuple_statistics_t rabin_karp_hash_improved(std::string_view haystack, std::string_view needle) {
 
 		const auto haystack_size = haystack.size();
-		const auto needle_size = needle.size();
-		u64 comparisons = 0;
+		const auto needle_size   = needle.size();
+		u64 comparisons          = 0;
 
 		std::vector<u64> matches;
 		static const auto hash_function = [](std::string_view::iterator begin, std::string_view::iterator end) {
@@ -164,8 +164,8 @@ namespace algo {
 	tuple_statistics_t boyer_moore_horspool(std::string_view haystack, std::string_view needle) {
 
 		const      auto      haystack_size = haystack.size();
-		const      auto      needle_size = needle.size();
-		u64      comparisons = 0;
+		const      auto      needle_size   = needle.size();
+		            u64      comparisons   = 0;
 		std::vector<u64>     matches;
 		u32 bad_match_table[256];
 
@@ -187,12 +187,12 @@ namespace algo {
 
 	tuple_statistics_t knuth_morris_pratt(std::string_view haystack, std::string_view needle) {
 
-		const      auto      haystack_size = haystack.size();
-		const      auto      needle_size = needle.size();
-		u64					 comparisons = 0;
-		std::vector<u64>     matches;
-		std::size_t      index = 0,
-						 offset = 0;
+		const      auto    haystack_size = haystack.size();
+		const      auto    needle_size = needle.size();
+		            u64    comparisons = 0;
+		std::vector<u64>   matches;
+		    std::size_t    index = 0,
+				   offset = 0;
 		std::vector<char> preproccessing_array;
 		preproccessing_array.reserve(needle_size);
 
@@ -205,7 +205,7 @@ namespace algo {
 				}
 				else {
 					if (length != 0) length = preproccessing_array[length - 1];
-					else               preproccessing_array[i] = 0; ++i;
+					else             preproccessing_array[i] = 0; ++i;
 				}
 			}
 		};
