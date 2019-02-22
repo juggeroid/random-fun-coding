@@ -131,7 +131,7 @@ namespace algo {
 				for (size_t j = i; j < i + needle.size(); ++j, ++p, ++comparisons) {
 					if (needle[p] != haystack[j]) break;
 				}
-				if (p == needle.size()) matches.emplace_back(i);
+				if (p == needle_size) matches.emplace_back(i);
 			}
 			haystack_hash = (alphabet_size * (haystack_hash - haystack[i] * h) + haystack[i + needle.size()]) % prime;
 			if (haystack_hash < 0) haystack_hash += prime;
