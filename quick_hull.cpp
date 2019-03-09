@@ -14,11 +14,14 @@ namespace {
     using i32 = std::int32_t; using u32 = std::uint32_t;
 
     struct point_t {
-
         i64 x, y;
-        friend std::ostream& operator<<(std::ostream&o, point_t const& point) { return o << point.x << ' ' << point.y; }        
-        friend bool operator<(const point_t& lhs, const point_t& rhs) { return (lhs.x < rhs.x) || ((!(rhs.x < lhs.x)) && (lhs.y < rhs.y)); }
-
+        
+        friend std::ostream& operator<<(std::ostream&o, point_t const& point)
+        { return o << point.x << ' ' << point.y; }        
+        
+        friend bool operator<(const point_t& lhs, const point_t& rhs)
+        { return (lhs.x < rhs.x) || ((!(rhs.x < lhs.x)) && (lhs.y < rhs.y)); }
+        
         point_t(i64 x, i64 y): x (x), y (y) {}
     };
 
