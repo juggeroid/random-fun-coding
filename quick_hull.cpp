@@ -38,7 +38,7 @@ namespace {
 namespace utility {
 
     template <typename T, typename = std::enable_if_t<std::is_integral_v<T>, T>>
-    static T random_integral
+    T random_integral
     (T lower_bound = std::numeric_limits<T>::min(), T upper_bound = std::numeric_limits<T>::max()) {
         static std::mt19937_64 generator {std::random_device {}()};
         static std::uniform_int_distribution<T> distribution (lower_bound, upper_bound);
@@ -84,10 +84,9 @@ namespace quick_hull_algorithm {
             
             if (farthest == std::numeric_limits<i32>::max()) { hull.emplace(x); hull.emplace(y); return; }
             find_hull(points[farthest], x, (side == 1) ? -1:  1);
-            find_hull(points[farthest], y, (side == 1) ?  1: -1);
-            
+            find_hull(points[farthest], y, (side == 1) ?  1: -1);  
         };
-
+        
         auto [min, max] = std::minmax_element(std::begin(points), std::end(points), [&](point_t const& a, point_t const& b) { return a.x < b.x; });
         find_hull(*min, *max, 1); find_hull(*min, *max, -1);
         return hull;
