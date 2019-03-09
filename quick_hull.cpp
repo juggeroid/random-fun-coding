@@ -84,10 +84,19 @@ namespace quick_hull_algorithm {
 }
 
 int main() {
-    std::vector<point_t> points {{0, 0}, {0, 4}, {-4, 0}, {5, 0},
-                                 {0, -6}, {1, 0}};
-    auto result = quick_hull_algorithm::quick_hull_finder(points);
-    for (const auto& el: result) std::cout << el << "\n";
-
+    std::vector<point_t> points;
+    std::cout << "[qhull] Please, set the number of randomly arranged points.\n";
+    i32 n = (static_cast<void>(std::cin >> n), n);
+    for (std::size_t i = 0; i < n; ++i) {
+        point_t temporary = {utility::random_integral(-300, 300), utility::random_integral(-300, 300)};
+        points.push_back(temporary);
+    }
+    std::cout << "[qhull] Trying to build the convex hull ...\n";
+    auto hull_points = quick_hull_algorithm::quick_hull_finder(points);
+    std::cout << "[qhull] Dumping the results to I/O ...\n";
+    std::ofstream p {"pts.txt"}, h {"h.txt"};
+    utility::container_to_io(points, p); utility::container_to_io(hull_points, h);
+    std::cout << "[qhull] Success!\n";
+    for (const auto& el: hull_points) std::cout << el << "\n";
     return 0;
 }
