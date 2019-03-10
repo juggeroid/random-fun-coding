@@ -67,7 +67,7 @@ namespace quick_hull_algorithm {
 
         std::function<void(point_t const&, point_t const&, i32)> find_hull;
         find_hull = [&points, &cross_product, &hull, &find_hull] (point_t const& x, point_t const& y, i32 side) {
-            auto farthest = std::numeric_limits<i32>::max(); auto maximum = 0;
+            i32 farthest = std::numeric_limits<i32>::max(), maximum = 0;
             for (std::size_t index = 0; index < points.size(); ++index) {
                 if (const auto [sign, distance] = cross_product(x, y, points[index]); sign == side && distance > maximum) {
                     farthest = index; maximum = distance;
@@ -77,7 +77,8 @@ namespace quick_hull_algorithm {
             find_hull(points[farthest], x, (side == 1) ? -1:  1);
             find_hull(points[farthest], y, (side == 1) ?  1: -1);  
         };
-        auto [min, max] = std::minmax_element(std::begin(points), std::end(points), [&](point_t const& a, point_t const& b) { return a.x < b.x; });
+        auto [min, max] = std::minmax_element(std::begin(points), std::end(points), 
+                                              [&](point_t const& a, point_t const& b) { return a.x < b.x; });
         find_hull(*min, *max, 1); find_hull(*min, *max, -1);
         return hull;
     };
